@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Config">
+      <Tab.Navigator initialRouteName="Config.">
         <Tab.Screen
           name="Config."
           component={ConfigScreen}
