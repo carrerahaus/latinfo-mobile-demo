@@ -1,49 +1,60 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { globalStyles } from './styles/global';
-import { setToken } from './lib/client';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import ConfigScreen from './screens/ConfigScreen';
+import LookupScreen from './screens/LookupScreen';
+import SearchScreen from './screens/SearchScreen';
+import LicitacionesScreen from './screens/LicitacionesScreen';
 
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [apiKey, setApiKey] = useState('');
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSaveApiKey = async () => {
-    if (!apiKey.trim()) {
-      setError('Ingresa una API Key');
-      return;
-    }
-
-    try {
-      await setToken(apiKey);
-      setError(null); // limpiar error
-      alert('API Key guardada');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-    }
-  };
-
   return (
-    <View style={globalStyles.container}>
-      <Text style={globalStyles.label}>API Key</Text>
-      <TextInput
-        value={apiKey}
-        onChangeText={setApiKey}
-        placeholder="Introduce tu API Key"
-        style={globalStyles.input}
-      />
-
-      <TouchableOpacity style={globalStyles.button} onPress={handleSaveApiKey}>
-        <Text style={globalStyles.buttonText}>Guardar API Key</Text>
-      </TouchableOpacity>
-
-      {error && (
-        <Text style={[globalStyles.status, { color: 'red', marginTop: 10 }]}>
-          Error: {error}
-        </Text>
-      )}
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName="Config">
+        <Tab.Screen
+          name="Config"
+          component={ConfigScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="settings-outline" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="RUC"
+          component={LookupScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="document-text-outline" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Buscar"
+          component={SearchScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search-outline" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="Licitaciones"
+          component={LicitacionesScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="briefcase-outline" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
