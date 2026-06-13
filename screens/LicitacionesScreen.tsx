@@ -35,7 +35,10 @@ export default function LicitacionesScreen() {
       if (!licitaciones || licitaciones.length === 0) {
         setError('No encontrado');
       } else {
-        setResults(licitaciones);
+        const unique = Array.from(
+          new Map(licitaciones.map(item => [item.id, item])).values()
+        );
+        setResults(unique);
       }
     } catch (e: any) {
       setError(`Error de red: ${e.message}`);
@@ -58,7 +61,7 @@ export default function LicitacionesScreen() {
         <Text style={globalStyles.buttonText}>Buscar</Text>
       </TouchableOpacity>
 
-      {loading && <Text style={globalStyles.status}>⏳ Buscando...</Text>}
+      {loading && <Text style={globalStyles.status}>Buscando...</Text>}
       {error && <Text style={[globalStyles.status, { color: 'red' }]}>{error}</Text>}
       {latency !== null && (
         <Text style={globalStyles.status}>Latencia: {latency} ms</Text>
@@ -70,12 +73,21 @@ export default function LicitacionesScreen() {
         keyExtractor={(item, index) => `${item.id || index}`}
         renderItem={({ item }) => (
           <View style={{ marginBottom: 12 }}>
-            <Text style={globalStyles.label}>Título: {item.title}</Text>
-            <Text style={globalStyles.label}>Comprador: {item.buyer}</Text>
             <Text style={globalStyles.label}>
-              Monto: {item.amount} {item.currency}
+              Título: {item?.tender?.description ?? '-'}
             </Text>
-            <Text style={globalStyles.label}>Estado: {item.status}</Text>
+
+            <Text style={globalStyles.label}>
+              Comprador: {item?.buyer?.name ?? '-'}
+            </Text>
+
+            <Text style={globalStyles.label}>
+              Monto: {item?.tender?.value?.amount ?? '-'} {item?.tender?.value?.currencyName ?? ''}
+            </Text>
+
+            <Text style={globalStyles.label}>
+              Estado: {item?.tender?.items?.[0]?.statusDetails ?? '-'}
+            </Text>
           </View>
         )}
       />

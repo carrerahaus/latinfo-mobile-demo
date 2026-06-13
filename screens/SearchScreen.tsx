@@ -8,22 +8,8 @@ export default function SearchScreen() {
   const [results, setResults] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isOfflineAvailable, setIsOfflineAvailable] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const client = await getClient();
-        if (client) {
-          setIsOfflineAvailable(client.pe.isOffline);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-      }
-    })();
-  }, []);
-
-  const handleSearch = async (mode: 'online' | 'offline') => {
+  const handleSearch = async () => {
     setError(null);
     setResults([]);
     setLoading(true);
@@ -35,21 +21,9 @@ export default function SearchScreen() {
         setLoading(false);
         return;
       }
-
-      let data;
-      if (mode === 'online') {
-        data = await client.pe.search(query);
-      } else {
-        if (!client.pe.isOffline) {
-          setError('Modo offline no disponible');
-          setLoading(false);
-          return;
-        }
-        data = await client.pe.searchOffline(query);
-      }
-
+      const data = await client.pe.search(query);
       if (!data || data.length === 0) {
-        setError('No encontrado');
+        setError('No se hallaron resultados');
       } else {
         setResults(data);
       }
@@ -72,24 +46,12 @@ export default function SearchScreen() {
 
       <TouchableOpacity
         style={globalStyles.button}
-        onPress={() => handleSearch('online')}
+        onPress={() => handleSearch()}
       >
-        <Text style={globalStyles.buttonText}>Buscar online</Text>
+        <Text style={globalStyles.buttonText}>Buscar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[
-          globalStyles.button,
-          globalStyles.buttonSecondary,
-          !isOfflineAvailable ? { opacity: 0.5 } : null,
-        ]}
-        onPress={() => handleSearch('offline')}
-        disabled={!isOfflineAvailable}
-      >
-        <Text style={globalStyles.buttonText}>Buscar offline</Text>
-      </TouchableOpacity>
-
-      {loading && <Text style={globalStyles.status}>⏳ Buscando...</Text>}
+      {loading && <Text style={globalStyles.status}>Buscando...</Text>}
       {error && <Text style={[globalStyles.status, { color: 'red' }]}>{error}</Text>}
 
       <FlatList
@@ -98,7 +60,7 @@ export default function SearchScreen() {
         keyExtractor={(item) => item.ruc}
         renderItem={({ item }) => (
           <View style={{ marginBottom: 12 }}>
-            <Text style={globalStyles.label}>RUC: {item.ruc}</Text>
+            <Text style={globalStyles.label}>RUC: {item.id}</Text>
             <Text style={globalStyles.label}>Razón Social: {item.razon_social}</Text>
             <Text style={globalStyles.label}>Estado: {item.estado}</Text>
           </View>

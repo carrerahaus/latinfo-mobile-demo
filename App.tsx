@@ -15,7 +15,7 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Config">
         <Tab.Screen
-          name="Config"
+          name="Config."
           component={ConfigScreen}
           options={{
             tabBarIcon: ({ color, size }) => (

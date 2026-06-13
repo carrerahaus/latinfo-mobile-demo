@@ -20,7 +20,7 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: '#fff',
   },
   button: {
@@ -40,7 +40,7 @@ export const globalStyles = StyleSheet.create({
     fontWeight: '600',
   },
   status: {
-    marginTop: 30,
+    marginTop: 15,
     fontSize: 16,
     textAlign: 'center',
   },

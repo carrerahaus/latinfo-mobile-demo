@@ -29,14 +29,14 @@ export default function LookupScreen() {
       const data = await client.pe.ruc(ruc);
       const end = Date.now();
       setLatency(end - start);
-
-      if (!data) {
-        setError('No encontrado');
-      } else {
-        setResult(data);
-      }
+      setResult(data);
     } catch (e: any) {
-      setError(`Error de red: ${e.message}`);
+      const status = e?.response?.status;
+      if (status === 404) {
+        setError('RUC no encontrado');
+      } else {
+        setError(`Error de red: ${e.message}`);
+      }
     }
   };
 
@@ -64,7 +64,9 @@ export default function LookupScreen() {
           <Text style={globalStyles.label}>Estado: {result.estado}</Text>
           <Text style={globalStyles.label}>Condición: {result.condicion}</Text>
           <Text style={globalStyles.label}>Ubigeo: {result.ubigeo}</Text>
-          <Text style={globalStyles.label}>Dirección: {result.direccion}</Text>
+          <Text style={globalStyles.label}>
+            Dirección: {result.tipo_via} {result.nombre_via} {result.numero}, {result.codigo_zona} {result.tipo_zona}
+          </Text>
           {latency !== null && (
             <Text style={globalStyles.status}>Latencia: {latency} ms</Text>
           )}
