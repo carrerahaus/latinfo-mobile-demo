@@ -31,11 +31,10 @@ export default function LookupScreen() {
       setLatency(end - start);
       setResult(data);
     } catch (e: any) {
-      const status = e?.response?.status;
-      if (status === 404) {
+      if (e.message === 'not_found') {
         setError('RUC no encontrado');
       } else {
-        setError(`Error de red: ${e.message}`);
+        setError(`Error: ${e.message}`);
       }
     }
   };

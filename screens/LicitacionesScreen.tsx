@@ -41,7 +41,7 @@ export default function LicitacionesScreen() {
         setResults(unique);
       }
     } catch (e: any) {
-      setError(`Error de red: ${e.message}`);
+      setError(`Error: ${e.message}`);
     } finally {
       setLoading(false);
     }
