@@ -2,7 +2,7 @@
 
 ## Instalación
 
-Clonar el repositorio e instala las dependencias:
+Clonar el repositorio e instalar las dependencias:
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
